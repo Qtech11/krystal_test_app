@@ -36,7 +36,7 @@ class BlogPostSearchDelegate extends SearchDelegate<List<BlogPostModel>> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder<List<BlogPostModel>>(
-      future: searchBlogPost(),
+      future: BlogApis().searchBlogPost(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<BlogPostModel> suggestions = snapshot.data!

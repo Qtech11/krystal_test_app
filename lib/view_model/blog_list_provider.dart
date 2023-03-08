@@ -12,7 +12,7 @@ class BlogListProvider extends ChangeNotifier {
   //To get the list of blog post from the api and and update the UI simultaneously
   Future<void> updateList() async {
     isLoading = true;
-    List<BlogPostModel>? list = await getListOfBlogPost();
+    List<BlogPostModel>? list = await BlogApis().getListOfBlogPost();
     if (list != null) {
       post = list;
     }
@@ -25,7 +25,7 @@ class BlogListProvider extends ChangeNotifier {
     comments = null;
     loadingComments = true;
     notifyListeners();
-    List<CommentsModel>? list = await getABlogComments(postId);
+    List<CommentsModel>? list = await BlogApis().getABlogComments(postId);
     if (list != null) {
       comments = list;
     }

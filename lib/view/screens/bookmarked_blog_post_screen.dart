@@ -104,8 +104,7 @@ class _BookmarkedBlogPostScreenState extends State<BookmarkedBlogPostScreen> {
                       bool shouldDelete = false;
                       await showDialog(
                         context: context,
-                        barrierDismissible:
-                            false, // dialog is dismissible with a tap on the barrier
+                        barrierDismissible: false,
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text(
