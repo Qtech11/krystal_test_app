@@ -17,16 +17,10 @@ class BlogApis {
         return List<BlogPostModel>.from(
             result.map((x) => BlogPostModel.fromJson(x)));
       } else {
-        ShowSnackBar.showSnackBar(
-          message: 'Error loading data',
-          color: red,
-        );
+        throw 'Error loading data';
       }
     } catch (e) {
-      ShowSnackBar.showSnackBar(
-        message: 'Error loading data. Check your internet connection',
-        color: red,
-      );
+      throw 'Error loading data. Check your internet connection';
     }
   }
 

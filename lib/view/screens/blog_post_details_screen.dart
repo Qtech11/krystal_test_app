@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:krystal_test_app/view/utilities/colors.dart';
 import 'package:krystal_test_app/view/utilities/styles.dart';
-import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../model/blog_post_model.dart';
-import '../../model/comments_model.dart';
-import '../../view_model/blog_list_provider.dart';
-import '../../view_model/bookmarked_post_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../view_model/providers.dart';
 
-class BlogPostDetail extends StatefulWidget {
+class BlogPostDetail extends ConsumerStatefulWidget {
   final BlogPostModel post;
   final bool isBookmark;
 
@@ -20,12 +18,12 @@ class BlogPostDetail extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BlogPostDetail> createState() => _BlogPostDetailState();
+  ConsumerState<BlogPostDetail> createState() => _BlogPostDetailState();
 }
 
-class _BlogPostDetailState extends State<BlogPostDetail> {
+class _BlogPostDetailState extends ConsumerState<BlogPostDetail> {
   Future<void> onRefresh() async {
-    await context.read<BlogListProvider>().getCommentsOfAPost(widget.post.id);
+    await ref.read(blogListProvider).getCommentsOfAPost(widget.post.id);
   }
 
   void _sharePost() {
@@ -36,20 +34,18 @@ class _BlogPostDetailState extends State<BlogPostDetail> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<BlogListProvider>().getCommentsOfAPost(widget.post.id);
-      context.read<BookmarkedPostProvider>().doesPostExist(widget.post.id);
+      ref.read(blogListProvider).getCommentsOfAPost(widget.post.id);
+      ref.read(bookmarkedPostProvider).doesPostExist(widget.post.id);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<CommentsModel>? blogComments =
-        context.watch<BlogListProvider>().comments;
-    bool isLoading = context.watch<BlogListProvider>().loadingComments;
+    final blogComments = ref.watch(blogListProvider).comments;
+    bool isLoading = ref.watch(blogListProvider).loadingComments;
     double width = MediaQuery.of(context).size.width;
-    bool existInBookMark =
-        context.watch<BookmarkedPostProvider>().bookmarkStatus;
+    bool existInBookMark = ref.watch(bookmarkedPostProvider).bookmarkStatus;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.post.title),
@@ -59,8 +55,8 @@ class _BlogPostDetailState extends State<BlogPostDetail> {
               ? const SizedBox()
               : IconButton(
                   onPressed: () {
-                    context
-                        .read<BookmarkedPostProvider>()
+                    ref
+                        .read(bookmarkedPostProvider)
                         .addAPostToBookMarks(widget.post);
                   },
                   icon: !existInBookMark

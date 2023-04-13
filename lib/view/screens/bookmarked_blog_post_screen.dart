@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:krystal_test_app/view/utilities/colors.dart';
 import 'package:krystal_test_app/view/utilities/styles.dart';
-import 'package:provider/provider.dart';
 import '../../model/blog_post_model.dart';
-import '../../view_model/bookmarked_post_provider.dart';
+import '../../view_model/providers.dart';
 import 'blog_post_details_screen.dart';
 
-class BookmarkedBlogPostScreen extends StatefulWidget {
+class BookmarkedBlogPostScreen extends ConsumerStatefulWidget {
   const BookmarkedBlogPostScreen({Key? key}) : super(key: key);
 
   @override
-  State<BookmarkedBlogPostScreen> createState() =>
+  ConsumerState<BookmarkedBlogPostScreen> createState() =>
       _BookmarkedBlogPostScreenState();
 }
 
-class _BookmarkedBlogPostScreenState extends State<BookmarkedBlogPostScreen> {
+class _BookmarkedBlogPostScreenState
+    extends ConsumerState<BookmarkedBlogPostScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      context.read<BookmarkedPostProvider>().getListOfPost();
+      ref.read(bookmarkedPostProvider).getListOfPost();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<BlogPostModel> blogPosts =
-        context.watch<BookmarkedPostProvider>().postList;
+    List<BlogPostModel> blogPosts = ref.watch(bookmarkedPostProvider).postList;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -139,8 +139,8 @@ class _BookmarkedBlogPostScreenState extends State<BookmarkedBlogPostScreen> {
                           );
                         },
                       ).whenComplete(() => shouldDelete
-                          ? context
-                              .read<BookmarkedPostProvider>()
+                          ? ref
+                              .read(bookmarkedPostProvider)
                               .deletePost(blogPosts[index].id)
                           : null);
                     },

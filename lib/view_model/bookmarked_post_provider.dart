@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:krystal_test_app/view/widgets/snack_bar.dart';
-
 import '../model/blog_post_model.dart';
 import '../services/database/local_database.dart';
 import '../view/utilities/colors.dart';
